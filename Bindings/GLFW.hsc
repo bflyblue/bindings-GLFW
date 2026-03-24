@@ -50,7 +50,6 @@ import Prelude (($), return, error, (++), undefined, div, take)
 import Data.Data             (Data)
 import Data.Int              (Int32)
 import Data.Word             (Word32, Word64)
-import Data.Typeable         (Typeable)
 import Foreign.C.Types       (CChar, CUChar, CUShort, CSize(..))
 import Foreign.C.Types       (CDouble(..), CFloat(..), CInt(..), CUInt(..))
 import Foreign.C.String      (CString)
@@ -294,11 +293,9 @@ import Foreign.Storable      (Storable(..))
 #callback GLFWglproc , IO ()
 
 #opaque_t GLFWmonitor
-deriving instance Typeable C'GLFWmonitor
 deriving instance Data     C'GLFWmonitor
 
 #opaque_t GLFWwindow
-deriving instance Typeable C'GLFWwindow
 deriving instance Data     C'GLFWwindow
 
 #callback GLFWerrorfun              , CInt -> Ptr CChar ->                                IO ()
@@ -434,7 +431,6 @@ deriving instance Data     C'GLFWwindow
 #stoptype
 
 #opaque_t GLFWcursor
-deriving instance Typeable C'GLFWcursor
 deriving instance Data     C'GLFWcursor
 
 #callback GLFWdropfun , Ptr <GLFWwindow> -> CInt -> Ptr (Ptr CChar) -> IO ()
