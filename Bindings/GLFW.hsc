@@ -596,6 +596,63 @@ deriving instance Data     C'GLFWcursor
 #ccall glfwRawMouseMotionSupported       , IO CInt
 
 --------------------------------------------------------------------------------
+-- GLFW 3.4 additions
+--------------------------------------------------------------------------------
+
+-- Error codes
+#num GLFW_CURSOR_UNAVAILABLE
+#num GLFW_FEATURE_UNAVAILABLE
+#num GLFW_FEATURE_UNIMPLEMENTED
+#num GLFW_PLATFORM_UNAVAILABLE
+
+-- Platform
+#num GLFW_PLATFORM
+#num GLFW_ANY_PLATFORM
+#num GLFW_PLATFORM_WIN32
+#num GLFW_PLATFORM_COCOA
+#num GLFW_PLATFORM_WAYLAND
+#num GLFW_PLATFORM_X11
+#num GLFW_PLATFORM_NULL
+
+-- Cursor shapes
+#num GLFW_POINTING_HAND_CURSOR
+#num GLFW_RESIZE_EW_CURSOR
+#num GLFW_RESIZE_NS_CURSOR
+#num GLFW_RESIZE_NWSE_CURSOR
+#num GLFW_RESIZE_NESW_CURSOR
+#num GLFW_RESIZE_ALL_CURSOR
+#num GLFW_NOT_ALLOWED_CURSOR
+
+-- Cursor mode
+#num GLFW_CURSOR_CAPTURED
+
+-- Window hints
+#num GLFW_POSITION_X
+#num GLFW_POSITION_Y
+#num GLFW_ANY_POSITION
+#num GLFW_MOUSE_PASSTHROUGH
+#num GLFW_SCALE_FRAMEBUFFER
+#num GLFW_WIN32_KEYBOARD_MENU
+#num GLFW_WIN32_SHOWDEFAULT
+#num GLFW_WAYLAND_APP_ID
+
+-- ANGLE platform type
+#num GLFW_ANGLE_PLATFORM_TYPE
+#num GLFW_ANGLE_PLATFORM_TYPE_NONE
+#num GLFW_ANGLE_PLATFORM_TYPE_OPENGL
+#num GLFW_ANGLE_PLATFORM_TYPE_OPENGLES
+#num GLFW_ANGLE_PLATFORM_TYPE_D3D9
+#num GLFW_ANGLE_PLATFORM_TYPE_D3D11
+#num GLFW_ANGLE_PLATFORM_TYPE_VULKAN
+#num GLFW_ANGLE_PLATFORM_TYPE_METAL
+
+-- Context
+#num GLFW_CONTEXT_DEBUG
+
+-- Misc
+#num GLFW_X11_XCB_VULKAN_SURFACE
+
+--------------------------------------------------------------------------------
 -- Native APIs
 --------------------------------------------------------------------------------
 
