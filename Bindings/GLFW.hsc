@@ -51,7 +51,7 @@ import Data.Data             (Data)
 import Data.Int              (Int32)
 import Data.Word             (Word32, Word64)
 import Data.Typeable         (Typeable)
-import Foreign.C.Types       (CChar, CUChar, CUShort)
+import Foreign.C.Types       (CChar, CUChar, CUShort, CSize(..))
 import Foreign.C.Types       (CDouble(..), CFloat(..), CInt(..), CUInt(..))
 import Foreign.C.String      (CString)
 import Foreign.Marshal.Array (peekArray,pokeArray)
@@ -652,6 +652,25 @@ deriving instance Data     C'GLFWcursor
 -- Misc
 #num GLFW_X11_XCB_VULKAN_SURFACE
 
+-- Allocator callbacks
+#callback GLFWallocatefun   , CSize -> Ptr () -> IO (Ptr ())
+#callback GLFWreallocatefun , Ptr () -> CSize -> Ptr () -> IO (Ptr ())
+#callback GLFWdeallocatefun , Ptr () -> Ptr () -> IO ()
+
+-- Allocator struct
+#starttype GLFWallocator
+#field allocate   , <GLFWallocatefun>
+#field reallocate , <GLFWreallocatefun>
+#field deallocate , <GLFWdeallocatefun>
+#field user       , Ptr ()
+#stoptype
+
+-- Functions
+#ccall glfwInitAllocator     , Ptr <GLFWallocator> -> IO ()
+#ccall glfwGetPlatform       , IO CInt
+#ccall glfwPlatformSupported , CInt -> IO CInt
+#ccall glfwGetWindowTitle    , Ptr <GLFWwindow> -> IO CString
+
 --------------------------------------------------------------------------------
 -- Native APIs
 --------------------------------------------------------------------------------
@@ -702,6 +721,7 @@ c'glfwGetWGLContext =
 #if defined(GLFW_EXPOSE_NATIVE_COCOA)
 #ccall glfwGetCocoaMonitor , Ptr <GLFWmonitor> -> IO (Ptr Word32)
 #ccall glfwGetCocoaWindow , Ptr <GLFWwindow> -> IO (Ptr ())
+#ccall glfwGetCocoaView , Ptr <GLFWwindow> -> IO (Ptr ())
 #else
 p'glfwGetCocoaMonitor :: FunPtr (Ptr C'GLFWmonitor -> IO (Ptr Word32))
 p'glfwGetCocoaMonitor = nullFunPtr
@@ -717,6 +737,14 @@ p'glfwGetCocoaWindow = nullFunPtr
 c'glfwGetCocoaWindow :: Ptr C'GLFWwindow -> IO (Ptr ())
 c'glfwGetCocoaWindow =
   error $ "c'glfwGetCocoaWindow undefined! -- "
+       ++ "Did you use the wrong glfw3native API?"
+
+p'glfwGetCocoaView :: FunPtr (Ptr C'GLFWwindow -> IO (Ptr ()))
+p'glfwGetCocoaView = nullFunPtr
+
+c'glfwGetCocoaView :: Ptr C'GLFWwindow -> IO (Ptr ())
+c'glfwGetCocoaView =
+  error $ "c'glfwGetCocoaView undefined! -- "
        ++ "Did you use the wrong glfw3native API?"
 #endif
 
