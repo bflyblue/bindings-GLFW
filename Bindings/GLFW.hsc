@@ -548,6 +548,11 @@ deriving instance Data     C'GLFWcursor
 #num GLFW_JOYSTICK_HAT_BUTTONS
 #num GLFW_COCOA_CHDIR_RESOURCES
 #num GLFW_COCOA_MENUBAR
+#num GLFW_WAYLAND_LIBDECOR
+
+-- Init hint values for GLFW_WAYLAND_LIBDECOR
+#num GLFW_WAYLAND_PREFER_LIBDECOR
+#num GLFW_WAYLAND_DISABLE_LIBDECOR
 
 -- Window hints
 #num GLFW_TRANSPARENT_FRAMEBUFFER
@@ -595,23 +600,23 @@ deriving instance Data     C'GLFWcursor
 --------------------------------------------------------------------------------
 
 #if defined(GLFW_EXPOSE_NATIVE_WIN32)
-#ccall glfwGetWin32Adapter , Ptr <GLFWwindow> -> IO CString
-#ccall glfwGetWin32Monitor , Ptr <GLFWwindow> -> IO CString
+#ccall glfwGetWin32Adapter , Ptr <GLFWmonitor> -> IO CString
+#ccall glfwGetWin32Monitor , Ptr <GLFWmonitor> -> IO CString
 #ccall glfwGetWin32Window  , Ptr <GLFWwindow> -> IO (Ptr ())
 #else
 
-p'glfwGetWin32Adapter :: FunPtr (Ptr C'GLFWwindow -> IO CString)
+p'glfwGetWin32Adapter :: FunPtr (Ptr C'GLFWmonitor -> IO CString)
 p'glfwGetWin32Adapter = nullFunPtr
 
-c'glfwGetWin32Adapter :: Ptr C'GLFWwindow -> IO CString
+c'glfwGetWin32Adapter :: Ptr C'GLFWmonitor -> IO CString
 c'glfwGetWin32Adapter =
   error $ "c'glfwGetWin32Adapter undefined! -- "
        ++ "Did you use the wrong glfw3native API?"
 
-p'glfwGetWin32Monitor :: FunPtr (Ptr C'GLFWwindow -> IO CString)
+p'glfwGetWin32Monitor :: FunPtr (Ptr C'GLFWmonitor -> IO CString)
 p'glfwGetWin32Monitor = nullFunPtr
 
-c'glfwGetWin32Monitor :: Ptr C'GLFWwindow -> IO CString
+c'glfwGetWin32Monitor :: Ptr C'GLFWmonitor -> IO CString
 c'glfwGetWin32Monitor =
   error $ "c'glfwGetWin32Monitor undefined! -- "
        ++ "Did you use the wrong glfw3native API?"
@@ -638,13 +643,13 @@ c'glfwGetWGLContext =
 #endif
 
 #if defined(GLFW_EXPOSE_NATIVE_COCOA)
-#ccall glfwGetCocoaMonitor , Ptr <GLFWwindow> -> IO (Ptr Word32)
+#ccall glfwGetCocoaMonitor , Ptr <GLFWmonitor> -> IO (Ptr Word32)
 #ccall glfwGetCocoaWindow , Ptr <GLFWwindow> -> IO (Ptr ())
 #else
-p'glfwGetCocoaMonitor :: FunPtr (Ptr C'GLFWwindow -> IO (Ptr Word32))
+p'glfwGetCocoaMonitor :: FunPtr (Ptr C'GLFWmonitor -> IO (Ptr Word32))
 p'glfwGetCocoaMonitor = nullFunPtr
 
-c'glfwGetCocoaMonitor :: Ptr C'GLFWwindow -> IO (Ptr Word32)
+c'glfwGetCocoaMonitor :: Ptr C'GLFWmonitor -> IO (Ptr Word32)
 c'glfwGetCocoaMonitor =
   error $ "c'glfwGetCocoaMonitor undefined! -- "
        ++ "Did you use the wrong glfw3native API?"
@@ -672,8 +677,8 @@ c'glfwGetNSGLContext =
 
 #if defined(GLFW_EXPOSE_NATIVE_X11)
 #ccall glfwGetX11Display , IO (Ptr display)
-#ccall glfwGetX11Adapter , Ptr <GLFWwindow> -> IO Word64
-#ccall glfwGetX11Monitor , Ptr <GLFWwindow> -> IO Word64
+#ccall glfwGetX11Adapter , Ptr <GLFWmonitor> -> IO Word64
+#ccall glfwGetX11Monitor , Ptr <GLFWmonitor> -> IO Word64
 #ccall glfwGetX11Window  , Ptr <GLFWwindow> -> IO Word64
 
 --------------------------------------------------------------------------------
@@ -691,18 +696,18 @@ c'glfwGetX11Display =
   error $ "c'glfwGetX11Display undefined! -- "
        ++ "Did you use the wrong glfw3native API?"
 
-p'glfwGetX11Adapter :: FunPtr (Ptr C'GLFWwindow -> IO Word64)
+p'glfwGetX11Adapter :: FunPtr (Ptr C'GLFWmonitor -> IO Word64)
 p'glfwGetX11Adapter = nullFunPtr
 
-c'glfwGetX11Adapter :: Ptr C'GLFWwindow -> IO Word64
+c'glfwGetX11Adapter :: Ptr C'GLFWmonitor -> IO Word64
 c'glfwGetX11Adapter =
   error $ "c'glfwGetX11Adapter undefined! -- "
        ++ "Did you use the wrong glfw3native API?"
 
-p'glfwGetX11Monitor :: FunPtr (Ptr C'GLFWwindow -> IO Word64)
+p'glfwGetX11Monitor :: FunPtr (Ptr C'GLFWmonitor -> IO Word64)
 p'glfwGetX11Monitor = nullFunPtr
 
-c'glfwGetX11Monitor :: Ptr C'GLFWwindow -> IO Word64
+c'glfwGetX11Monitor :: Ptr C'GLFWmonitor -> IO Word64
 c'glfwGetX11Monitor =
   error $ "c'glfwGetX11Monitor undefined! -- "
        ++ "Did you use the wrong glfw3native API?"
@@ -755,7 +760,7 @@ c'glfwGetGLXWindow =
 
 #if defined(GLFW_EXPOSE_NATIVE_WAYLAND)
 #ccall glfwGetWaylandDisplay , IO (Ptr wl_display)
-#ccall glfwGetWaylandMonitor , Ptr <GLFWwindow> -> IO (Ptr wl_output)
+#ccall glfwGetWaylandMonitor , Ptr <GLFWmonitor> -> IO (Ptr wl_output)
 #ccall glfwGetWaylandWindow , Ptr <GLFWwindow> -> IO (Ptr wl_surface)
 #else
 p'glfwGetWaylandDisplay :: FunPtr (IO (Ptr wl_display))
@@ -766,10 +771,10 @@ c'glfwGetWaylandDisplay =
   error $ "c'glfwGetWaylandDisplay undefined! -- "
        ++ "Did you use the wrong glfw3native API?"
 
-p'glfwGetWaylandMonitor :: FunPtr (Ptr C'GLFWwindow -> IO (Ptr wl_output))
+p'glfwGetWaylandMonitor :: FunPtr (Ptr C'GLFWmonitor -> IO (Ptr wl_output))
 p'glfwGetWaylandMonitor = nullFunPtr
 
-c'glfwGetWaylandMonitor :: Ptr C'GLFWwindow -> IO (Ptr wl_output)
+c'glfwGetWaylandMonitor :: Ptr C'GLFWmonitor -> IO (Ptr wl_output)
 c'glfwGetWaylandMonitor =
   error $ "c'glfwGetWaylandMonitor undefined! -- "
        ++ "Did you use the wrong glfw3native API?"
