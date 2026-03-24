@@ -38,6 +38,7 @@ extra-source-files:
 
   glfw/deps/glad/*.h
   glfw/deps/mingw/*.h
+  glfw/deps/wayland/*.xml
 
   glfw/include/GLFW/*.h
 
@@ -113,7 +114,7 @@ library
 
   if flag(system-glfw)
     pkgconfig-depends:
-      glfw3 == 3.3.*
+      glfw3 == 3.4.*
   else
     include-dirs:
       glfw/include/GLFW
@@ -128,10 +129,13 @@ library
       glfw/src/input.c
       glfw/src/monitor.c
       glfw/src/osmesa_context.c
+      glfw/src/platform.c
       glfw/src/vulkan.c
       glfw/src/window.c
-      glfw/deps/glad_gl.c
-      glfw/deps/glad_vulkan.c
+      glfw/src/null_init.c
+      glfw/src/null_joystick.c
+      glfw/src/null_monitor.c
+      glfw/src/null_window.c
 
     if os(linux) || os(freebsd)
       c-sources:
@@ -139,12 +143,11 @@ library
         glfw/src/xkb_unicode.c
         glfw/src/posix_time.c
         glfw/src/posix_thread.c
+        glfw/src/posix_module.c
+        glfw/src/posix_poll.c
       if os(linux)
         c-sources:
           glfw/src/linux_joystick.c
-      if os(freebsd)
-        c-sources:
-          glfw/src/null_joystick.c
       if flag(X)
         cc-options: -DBINDINGS_GLFW_USE_X11 -D_GLFW_X11
         c-sources:
@@ -159,11 +162,6 @@ library
           glfw/src/wl_window.c
       if flag(OSMesa)
         cc-options: -DBINDINGS_GLFW_USE_OSMESA -D_GLFW_OSMESA
-        c-sources:
-          glfw/src/null_init.c
-          glfw/src/null_joystick.c
-          glfw/src/null_monitor.c
-          glfw/src/null_window.c
 
       extra-libraries:
         GL
@@ -179,6 +177,7 @@ library
       c-sources:
          glfw/src/cocoa_time.c
          glfw/src/posix_thread.c
+         glfw/src/posix_module.c
          glfw/src/cocoa_init.m
          glfw/src/cocoa_joystick.m
          glfw/src/cocoa_monitor.m
@@ -191,7 +190,7 @@ library
         cc-options: -UGLFW_USE_MENUBAR
       if !flag(MacOSXUseRetina)
         cc-options: -UGLFW_USE_RETINA
-      frameworks: Cocoa OpenGL IOKit CoreFoundation CoreVideo
+      frameworks: Cocoa OpenGL IOKit CoreFoundation
 
     if os(mingw32)
       include-dirs:
@@ -199,6 +198,7 @@ library
       c-sources:
         glfw/src/win32_init.c
         glfw/src/win32_joystick.c
+        glfw/src/win32_module.c
         glfw/src/win32_monitor.c
         glfw/src/win32_time.c
         glfw/src/win32_window.c
@@ -222,7 +222,7 @@ test-suite main
 
   type: exitcode-stdio-1.0
   main-is: Test.hs
-  frameworks: Cocoa OpenGL IOKit CoreFoundation CoreVideo
+  frameworks: Cocoa OpenGL IOKit CoreFoundation
 
   build-depends:
     bindings-GLFW,
