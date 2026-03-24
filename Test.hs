@@ -60,8 +60,8 @@ main = do
 
 versionMajor, versionMinor, versionRevision :: Int
 versionMajor    = 3
-versionMinor    = 3
-versionRevision = 9
+versionMinor    = 4
+versionRevision = 0
 
 giveItTime :: IO ()
 giveItTime = threadDelay 500000
